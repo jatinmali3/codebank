@@ -1,1 +1,1 @@
-# codebank ss
+# codebank resource
