@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toggle menu</title>
+</head>
+
+<body>
+    <code>
+        <h1>html</h1>
+        <pre>
+              <div class="menu-toggle">☰ Menu</div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle-links">
+                <ul class="nav-links mobile-menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li>&nbsp;</li>
+                </ul>
+            </div>
+        </pre>
+         <h1>css</h1>
+         <pre>
+            
+.menu-toggle {
+    cursor: pointer;
+    display: none;
+    justify-items: right;
+}
+
+.menu-toggle-links {
+    display: none;
+    position: absolute;
+    right: 0%;
+    top: 1%;
+    width: 100%;
+    z-index: 20;
+    background-color: #fff;
+}
+
+.mobile-menu a {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.mobile-menu li :last-child {
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+<h2>Responsiv</h2>
+  .menu-toggle {
+        display: block;
+    }
+    .menu-toggle-links {
+        display: block
+    }
+    <h1>jquery</h1>
+     $('.menu-toggle-links').hide();
+      $('.menu-toggle').click(function() {
+          $('.menu-toggle-links').slideToggle(500);
+          $('.mobile-menu').toggleClass('active');
+
+          if ($(this).hasClass('toggled')) {
+              $(this).removeClass('toggled').text('☰ Menu');
+          } else {
+              $(this).addClass('toggled').text('✖ Close');
+          }
+      });
+         </pre>
+    </code>
+</body>
+
+</html>
