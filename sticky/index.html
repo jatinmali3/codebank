@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <code>
+        <pre>
+            <h1>js</h1>
+         var header = $("#header");
+    var sticky = header.offset().top;
+    $(window).on("scroll", function() {
+        if ($(window).scrollTop() > sticky) {
+            header.addClass("sticky");
+        } else {
+            header.removeClass("sticky");
+        }
+    });
+    <h2>css</h2>
+    
+.sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    padding: 10px;
+    animation: sticky-header-animation 0.5s ease forwards;
+}
+
+@keyframes sticky-header-animation {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+    </pre>
+     </code>
+</body>
+
+</html>
