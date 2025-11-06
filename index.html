@@ -80,11 +80,31 @@
               $(this).addClass('toggled').text('✖ Close');
           }
       });
+
+        //fro submenu
+            $(".accordin__trigger").click(function(e) {
+        e.preventDefault();
+        const parentLi = $(this).closest("li");
+
+        if ($(this).hasClass("active")) {
+
+            $(this).removeClass("active");
+            parentLi.find(".accordin__content").slideUp("slow");
+        } else {
+            
+            $(".accordin__trigger").removeClass("active");
+            $(".accordin__content").slideUp("slow");
+
+            $(this).addClass("active");
+            parentLi.find(".accordin__content").slideDown("slow");
+        }
+    });
     </script>
 </body>
 
 
 </html>
+
 
 
 
