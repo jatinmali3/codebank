@@ -1,11 +1,6 @@
 $(document).ready(function() {
-    $('.accordin__content').first().slideDown('slow');
-    $('.accordin__trigger').first().removeClass('active').addClass('active');
-    $(".accordin__trigger").click(function() {
-        $('.accordin__trigger').removeClass('active');
+     $('.accordin__trigger').not(this).removeClass('active');
+        $('.accordin__content').not($(this).next()).slideUp();
         $(this).addClass('active');
-
-        $('.accordin__content').slideUp('slow');
-        $(this).next().slideDown();
-    });
+        $(this).next('.accordin__content').slideDown();
 });
