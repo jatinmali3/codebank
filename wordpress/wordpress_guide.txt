@@ -1,0 +1,418 @@
+WORDPRESS PLAYBOOK
+==================
+
+Clean reference for live learning, quick revision, and project setup.
+
+At a glance
+- Theme setup, menus, and templates
+- Blog, ACF, and search/filter snippets
+- WooCommerce, shortcodes, and image support
+- Security, cache, and performance essentials
+- Recommended themes and plugins
+
+Quick index
+1. Themes
+2. Editor tools
+3. Core functions
+4. Menus
+5. Template basics
+6. Blog templates
+7. Footer example
+8. ACF examples
+9. Search and filter
+10. Shortcodes
+11. Image types
+12. WooCommerce
+13. Security
+14. Cache and performance
+15. Recommended stack
+16. Development habits
+
+--------------------------------------------------
+1) THEMES
+--------------------------------------------------
+
+Best starter and production-friendly themes
+- Underscores: https://underscores.me/ for a custom starter theme.
+- Storefront: best simple base for WooCommerce.
+- Astra: fast, friendly, and easy to start.
+- GeneratePress: lightweight and performance-focused.
+- Kadence: flexible and modern.
+- Blocksy: strong design control and good speed.
+
+--------------------------------------------------
+2) EDITOR TOOLS
+--------------------------------------------------
+
+Helpful VS Code extensions
+- WordPress Snippets
+- PHP Intelephense
+- Prettier
+- PHP Debug
+- WordPress Toolbox
+
+--------------------------------------------------
+3) CORE WORDPRESS FUNCTIONS
+--------------------------------------------------
+
+Use these often
+```php
+<?php echo get_permalink(6); ?>
+<?php echo esc_url( home_url( '/' ) ); ?>
+<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/
+<?php dynamic_sidebar( 'sidebar-2' ); ?>
+```
+
+--------------------------------------------------
+4) MENUS
+--------------------------------------------------
+
+Register menus in functions.php
+```php
+function webyant_register_menus() {
+	register_nav_menus(
+		array(
+			'menu-1'         => esc_html__( 'Primary', 'webyant' ),
+			'footer-company' => esc_html__( 'Footer Company', 'webyant' ),
+			'footer-legal'   => esc_html__( 'Footer Legal', 'webyant' ),
+		)
+	);
+}
+add_action( 'after_setup_theme', 'webyant_register_menus' );
+```
+
+Display a menu
+```php
+<?php
+wp_nav_menu(
+	array(
+		'theme_location' => 'menu-1',
+		'menu_id'        => 'primary-menu',
+		'menu_class'     => 'footer-menu',
+		'depth'          => 1,
+		'container'      => false,
+	)
+);
+?>
+```
+
+--------------------------------------------------
+5) TEMPLATE BASICS
+--------------------------------------------------
+
+Template name example
+```php
+<?php
+/*
+Template Name: About
+*/
+?>
+```
+
+--------------------------------------------------
+6) BLOG TEMPLATES
+--------------------------------------------------
+
+Where each file fits
+- index.php: main blog listing.
+- content-excerpt.php: archive and search excerpts.
+- single.php: single post view.
+- content.php: full post content template part.
+
+Useful snippets
+```php
+<?php the_post_thumbnail(); ?>
+<?php the_title( '<h4>', '</h4>' ); ?>
+<?php the_excerpt(); ?>
+<?php the_content(); ?>
+<?php the_post_navigation(); ?>
+```
+
+Post metadata
+```php
+<?php echo '<span class="post-date">' . get_the_date( 'd M Y' ) . '</span>'; ?>
+<?php echo '<span class="post-date">' . get_the_modified_date( 'd M Y' ) . '</span>'; ?>
+<?php the_category( ', ' ); ?>
+```
+
+--------------------------------------------------
+7) FOOTER EXAMPLE
+--------------------------------------------------
+
+```php
+<nav class="footer-navigation" aria-label="Footer Menu">
+	<div class="row">
+		<div class="col-6 col-md-6">
+			<p>Company</p>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'footer-company',
+					'menu_class'     => 'footer-links',
+					'container'      => false,
+				)
+			);
+			?>
+		</div>
+
+		<div class="col-6 col-md-6">
+			<p>Legal</p>
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => 'footer-legal',
+					'menu_class'     => 'footer-links',
+					'container'      => false,
+				)
+			);
+			?>
+		</div>
+	</div>
+</nav>
+```
+
+--------------------------------------------------
+8) ACF EXAMPLES
+--------------------------------------------------
+
+Simple field
+```php
+<?php if ( get_field( 'hero_title' ) ) : ?>
+	<h1><?php echo esc_html( get_field( 'hero_title' ) ); ?></h1>
+<?php endif; ?>
+```
+
+Repeater with Swiper
+```php
+<div class="swiper heroSwiper">
+	<div class="swiper-wrapper">
+		<?php if ( have_rows( 'hero_carousel' ) ) : ?>
+			<?php while ( have_rows( 'hero_carousel' ) ) : the_row(); ?>
+				<?php
+				$image = get_sub_field( 'carousel_image' );
+				$title = get_sub_field( 'carousel_title' );
+				$text  = get_sub_field( 'carousel_text' );
+				$link  = get_sub_field( 'carousel_link' );
+				?>
+				<div class="swiper-slide">
+					<?php if ( ! empty( $image['url'] ) ) : ?>
+						<img src="<?php echo esc_url( $image['url'] ); ?>" alt="<?php echo esc_attr( $title ); ?>">
+					<?php endif; ?>
+					<?php if ( $title ) : ?><h2><?php echo esc_html( $title ); ?></h2><?php endif; ?>
+					<?php if ( $text ) : ?><p><?php echo esc_html( $text ); ?></p><?php endif; ?>
+					<?php if ( $link ) : ?><a href="<?php echo esc_url( $link ); ?>">Read More</a><?php endif; ?>
+				</div>
+			<?php endwhile; ?>
+		<?php endif; ?>
+	</div>
+	<div class="swiper-pagination"></div>
+</div>
+```
+
+--------------------------------------------------
+9) SEARCH AND FILTER PAGE
+--------------------------------------------------
+
+```php
+<?php
+$terms = get_terms(
+	array(
+		'taxonomy'   => 'product_category',
+		'hide_empty' => false,
+	)
+);
+
+$selected_cat = isset( $_GET['cat'] ) ? sanitize_text_field( wp_unslash( $_GET['cat'] ) ) : '';
+$keyword      = isset( $_GET['keyword'] ) ? sanitize_text_field( wp_unslash( $_GET['keyword'] ) ) : '';
+?>
+
+<form method="get" id="product-filter-form" style="margin-bottom: 25px;">
+	<input type="text" name="keyword" placeholder="Search Products..." value="<?php echo esc_attr( $keyword ); ?>">
+
+	<select name="cat" onchange="document.getElementById('product-filter-form').submit();">
+		<option value="">All Products</option>
+		<?php foreach ( $terms as $term ) : ?>
+			<option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $selected_cat, $term->slug ); ?>>
+				<?php echo esc_html( $term->name ); ?>
+			</option>
+		<?php endforeach; ?>
+	</select>
+
+	<button type="submit" class="btn btn_filter">Filter</button>
+</form>
+
+<?php
+$args = array(
+	'post_type'      => 'product',
+	'posts_per_page' => -1,
+	's'              => $keyword,
+);
+
+if ( ! empty( $selected_cat ) ) {
+	$args['tax_query'] = array(
+		array(
+			'taxonomy' => 'product_category',
+			'field'    => 'slug',
+			'terms'    => $selected_cat,
+		),
+	);
+}
+
+$home_posts = new WP_Query( $args );
+?>
+```
+
+--------------------------------------------------
+10) SHORTCODES
+--------------------------------------------------
+
+Contact Form 7
+```php
+<?php echo do_shortcode( '[contact-form-7 id="ca571ef" title="Contact form"]' ); ?>
+```
+
+Other common shortcodes
+```text
+[fibosearch]
+[smartslider3 slider="2"]
+```
+
+--------------------------------------------------
+11) IMAGE TYPES
+--------------------------------------------------
+
+Allow SVG, WebP, and AVIF uploads
+```php
+function allow_extra_image_types( $mimes ) {
+	$mimes['svg']  = 'image/svg+xml';
+	$mimes['webp'] = 'image/webp';
+	$mimes['avif'] = 'image/avif';
+	return $mimes;
+}
+add_filter( 'upload_mimes', 'allow_extra_image_types' );
+```
+
+--------------------------------------------------
+12) WOOCOMMERCE
+--------------------------------------------------
+
+Useful plugins
+- Smart Slider 3 for product sliders
+- Product Carousel Slider & Grid Ultimate for WooCommerce
+- FiboSearch for live product search
+
+Slider image fix
+```css
+.wpcu-product__img img {
+	height: 300px !important;
+	width: 100% !important;
+	object-fit: cover !important;
+	display: block !important;
+}
+```
+
+Template areas
+- loop/
+- template/
+- single-product/
+
+Loop files often include
+- add-to-cart.php
+- header.php
+- loop-start.php
+- loop-end.php
+- no-products-found.php
+- orderby.php
+- pagination.php
+- price.php
+- rating.php
+- result-count.php
+- sale-flash.php
+
+--------------------------------------------------
+13) SECURITY
+--------------------------------------------------
+
+Checklist
+- Use strong passwords and unique admin usernames.
+- Keep WordPress core, themes, and plugins updated.
+- Install only trusted plugins from known authors.
+- Use esc_html, esc_attr, and esc_url when outputting dynamic data.
+- Sanitize all $_GET, $_POST, and form inputs.
+- Limit login attempts.
+- Enable 2FA for admin accounts.
+- Use nonces for forms and AJAX requests.
+- Back up the site regularly.
+
+Recommended plugins
+- Wordfence Security
+- iThemes Security
+- Sucuri Security
+
+--------------------------------------------------
+14) CACHE AND PERFORMANCE
+--------------------------------------------------
+
+Checklist
+- Use a caching plugin.
+- Enable page cache, browser cache, and object cache when possible.
+- Compress images before upload.
+- Use WebP where possible.
+- Minify CSS and JavaScript carefully.
+- Remove unused plugins and themes.
+- Limit heavy third-party scripts.
+- Use a CDN if the site has a wide audience.
+
+Recommended plugins
+- WP Rocket
+- LiteSpeed Cache
+- W3 Total Cache
+- Autoptimize
+
+Good habits
+- Use optimized images and lazy loading.
+- Keep homepage sections lightweight.
+- Avoid too many sliders and animations.
+- Prefer reusable template parts.
+
+--------------------------------------------------
+15) RECOMMENDED STACK
+--------------------------------------------------
+
+Themes
+- Storefront for WooCommerce
+- GeneratePress for speed
+- Astra for easy builds
+- Kadence for flexible layouts
+- Blocksy for modern design control
+
+Core plugins
+- Advanced Custom Fields
+- Contact Form 7
+- Elementor or Gutenberg blocks if needed
+- Rank Math SEO or Yoast SEO
+- WooCommerce
+
+Utility plugins
+- SVG support plugin if you do not want custom code
+- Smush or ShortPixel for image optimization
+- UpdraftPlus for backups
+
+--------------------------------------------------
+16) DEVELOPMENT HABITS
+--------------------------------------------------
+
+- Use template parts to keep files small and clean.
+- Keep custom functions in functions.php or a small custom plugin.
+- Use child themes when modifying an existing theme.
+- Prefer reusable code over hardcoded page-specific HTML.
+- Test on mobile, tablet, and desktop.
+
+--------------------------------------------------
+FINAL SUMMARY
+--------------------------------------------------
+
+Keep the setup simple: one good theme, trusted plugins, clean snippets, and strong security/performance habits.
+
+This file should stay as a living WordPress playbook, not a rough scratchpad.
+</div>
