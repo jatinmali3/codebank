@@ -3,12 +3,6 @@ WORDPRESS PLAYBOOK
 
 Clean reference for live learning, quick revision, and project setup.
 
-At a glance
-- Setup path from migration to launch
-- Reusable code patterns (template parts + functions organization)
-- WP_Query, ACF, AJAX search/filter practical snippets
-- WooCommerce, shortcodes, media, security, and performance
-
 Quick index
 1. Themes
 2. Editor tools
