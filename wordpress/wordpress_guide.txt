@@ -910,3 +910,5 @@ FINAL SUMMARY
 Keep the setup simple: one good theme, trusted plugins, clean snippets, and strong security/performance habits.
 
 This file should stay as a living WordPress playbook, not a rough scratchpad.
+
+elementskit  for elemntor headere footer
