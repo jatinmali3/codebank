@@ -27,6 +27,7 @@ Quick index
 21. Template parts usage
 22. Practical implementation (child theme + functions.php + reusable code)
 23. Functions.php feature snippets (ready edits)
+24. Text Highlight
 
 Quick sequence (implementation order)
 1. Start with section 17 (migration) if you are moving an existing site.
@@ -912,3 +913,15 @@ Keep the setup simple: one good theme, trusted plugins, clean snippets, and stro
 This file should stay as a living WordPress playbook, not a rough scratchpad.
 
 elementskit  for elemntor headere footer
+
+
+
+24. text Highlight 
+			<?php 
+$text = get_field('hero_title');
+
+if ($text) {
+    $text = preg_replace('/\{(.*?)\}/', '<span class="accent">$1</span>', $text);
+    echo '<h1>' . wp_kses_post($text) . '</h1>';
+}
+?>
