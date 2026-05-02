@@ -925,3 +925,21 @@ if ($text) {
     echo '<h1>' . wp_kses_post($text) . '</h1>';
 }
 ?>
+
+ and whith function
+function format_highlight_text($text) {
+
+    if (!$text) return '';
+
+    // Styled types
+    $text = preg_replace('/\{red:(.*?)\}/', '<span class="accent-red">$1</span>', $text);
+    $text = preg_replace('/\{bold:(.*?)\}/', '<span class="accent-bold">$1</span>', $text);
+    $text = preg_replace('/\{gradient:(.*?)\}/', '<span class="accent-gradient">$1</span>', $text);
+
+    // Default {word}
+    $text = preg_replace('/\{(.*?)\}/', '<span class="accent">$1</span>', $text);
+
+    return $text;
+}
+
+=====>   <h1><?php echo wp_kses_post(format_highlight_text(get_field('hero_title'))); ?></h1>
