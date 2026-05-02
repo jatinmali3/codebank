@@ -918,6 +918,7 @@ elementskit  for elemntor headere footer
 --------------------------------------------------
 24. text Highlight 
 --------------------------------------------------
+normal text one time 
 			<?php 
 $text = get_field('hero_title');
 
@@ -927,6 +928,7 @@ if ($text) {
 }
 ?>
 
+?? mroe text 
  and this insid a function.php
 
 function format_highlight_text($text) {
