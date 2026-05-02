@@ -915,8 +915,9 @@ This file should stay as a living WordPress playbook, not a rough scratchpad.
 elementskit  for elemntor headere footer
 
 
-
+--------------------------------------------------
 24. text Highlight 
+--------------------------------------------------
 			<?php 
 $text = get_field('hero_title');
 
@@ -926,20 +927,47 @@ if ($text) {
 }
 ?>
 
- and whith function
+ and this insid a function.php
+
 function format_highlight_text($text) {
 
     if (!$text) return '';
 
-    // Styled types
     $text = preg_replace('/\{red:(.*?)\}/', '<span class="accent-red">$1</span>', $text);
     $text = preg_replace('/\{bold:(.*?)\}/', '<span class="accent-bold">$1</span>', $text);
     $text = preg_replace('/\{gradient:(.*?)\}/', '<span class="accent-gradient">$1</span>', $text);
 
-    // Default {word}
     $text = preg_replace('/\{(.*?)\}/', '<span class="accent">$1</span>', $text);
 
     return $text;
 }
 
-=====>   <h1><?php echo wp_kses_post(format_highlight_text(get_field('hero_title'))); ?></h1>
+
+function highlight_field($field_name, $tag = 'h2') {
+
+    $text = get_field($field_name);
+
+    if (!$text) return;
+
+    echo "<{$tag}>" . wp_kses_post(format_highlight_text($text)) . "</{$tag}>";
+}
+
+
+function highlight_sub_field($field_name, $tag = 'h2') {
+
+    $text = get_sub_field($field_name);
+
+    if (!$text) return;
+
+    echo "<{$tag}>" . wp_kses_post(format_highlight_text($text)) . "</{$tag}>";
+}
+
+
+how to fatch in code 
+====>   <?php highlight_field('hero_title', 'h1'); ?>
+====>   <?php highlight_field('hero_title', 'h2'); ?>
+====>   <?php highlight_sub_field('content', 'h2'); ?>
+
+--------------------------------------------------
+end text highlight
+--------------------------------------------------
